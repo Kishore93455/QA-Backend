@@ -7,6 +7,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "@types/gapi.auth2": "^0.0.61",
     "bcrypt": "^6.0.0",
     "bull": "^4.16.5",
     "chokidar": "^3.6.0",
@@ -15,6 +16,7 @@
     "debug": "^4.4.1",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "google-auth-library": "^9.15.1",
     "ignore-by-default": "^1.0.1",
     "jsonwebtoken": "^9.0.2",
     "markdown-it": "^14.1.0",

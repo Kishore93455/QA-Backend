@@ -58,3 +58,7 @@ dump.pm2
 .env.development.local
 .env.test.local
 .env.production.local
+
+
+# files
+uploads

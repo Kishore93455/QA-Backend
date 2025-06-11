@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -31,8 +32,6 @@ app.use(morgan(':username - :method - :url - :indian-datetime - :status - :statu
 }));
 
 
-require('dotenv').config();
-
 const authRoutes = require('./routes/auth');
 const pdfRoutes = require('./routes/pdf');
 const qaRoutes = require('./routes/qa');
@@ -43,7 +42,14 @@ const editPdfRouter = require('./routes/edit-pdf');
 
 
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:4200', 
+  credentials: true,
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization'
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
@@ -61,17 +67,19 @@ app.use('/api/create_pdf', createPdfRouter);
 app.use('/api/edit_pdf', editPdfRouter);
 
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('Connected to MongoDB');
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
-
+})
+.catch(err => {
+  console.error('MongoDB connection error:', err);
+});
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
