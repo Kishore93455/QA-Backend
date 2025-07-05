@@ -1,9 +1,12 @@
 const express = require('express');
+const nodemailer = require('nodemailer'); 
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const User = require('../models/User');
 const router = express.Router();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const { checkData } = require('../Queue/queue')
+
 
 
 router.post('/register', async (req, res) => {
@@ -54,6 +57,7 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1d' }
     );
 
+     await checkData(user)
     res.json({
       token,
       user: {
@@ -88,9 +92,8 @@ router.post('/google-login', async (req, res) => {
       const randomPassword = crypto.randomBytes(32).toString('hex');
 
       user = new User({ name, email, password: randomPassword });
-      await user.save();
-      // mail to user
-    }
+      await user.save()
+    } 
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: '1d'
